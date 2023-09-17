@@ -1,49 +1,41 @@
-# Initialize an empty list to store tasks
-tasks = []
+import tkinter as tk
+from tkinter import messagebox
 
-# Function to add a task to the to-do list
-def add_task(task):
-    tasks.append(task)
-    print(f"Task '{task}' added to the to-do list.")
+app = tk.Tk()
+app.title("To-Do List")
 
-# Function to view all tasks in the to-do list
-def view_tasks():
-    if tasks:
-        print("\nTo-Do List:")
-        for index, task in enumerate(tasks, start=1):
-            print(f"{index}. {task}")
+# Function to add a new task
+def add_task():
+    task = task_entry.get()
+    if task:
+        task_listbox.insert(tk.END, task)
+        task_entry.delete(0, tk.END)
     else:
-        print("\nYour to-do list is empty.")
+        messagebox.showwarning("Warning", "Please enter a task.")
 
-# Function to remove a task from the to-do list
-def remove_task(task_index):
-    if 1 <= task_index <= len(tasks):
-        removed_task = tasks.pop(task_index - 1)
-        print(f"Task '{removed_task}' removed from the to-do list.")
-    else:
-        print("Invalid task index.")
+# Function to delete a selected task
+def delete_task():
+    try:
+        selected_task_index = task_listbox.curselection()[0]
+        task_listbox.delete(selected_task_index)
+    except IndexError:
+        messagebox.showwarning("Warning", "Please select a task to delete.")
 
-# Main loop for the to-do list application
-while True:
-    print("\nOptions:")
-    print("1. Add a task")
-    print("2. View tasks")
-    print("3. Remove a task")
-    print("4. Quit")
+# Create an entry widget for adding tasks
+task_entry = tk.Entry(app, width=40)
+task_entry.pack(pady=10)
 
-    choice = input("Enter your choice: ")
+# Create a button to add tasks
+add_button = tk.Button(app, text="Add Task", command=add_task)
+add_button.pack()
 
-    if choice == '1':
-        task = input("Enter the task: ")
-        add_task(task)
-    elif choice == '2':
-        view_tasks()
-    elif choice == '3':
-        view_tasks()
-        task_index = int(input("Enter the task number to remove: "))
-        remove_task(task_index)
-    elif choice == '4':
-        print("Goodbye!")
-        break
-    else:
-        print("Invalid choice. Please try again.")
+# Create a listbox to display tasks
+task_listbox = tk.Listbox(app, width=40, selectmode=tk.SINGLE)
+task_listbox.pack(pady=10)
+
+# Create a button to delete selected tasks
+delete_button = tk.Button(app, text="Delete Task", command=delete_task)
+delete_button.pack()
+
+# Start the Tkinter main loop
+app.mainloop()

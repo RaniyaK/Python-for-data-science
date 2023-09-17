@@ -1,22 +1,20 @@
-# Function to perform addition
+
 def add(x, y):
     return x + y
-
-# Function to perform subtraction
 def subtract(x, y):
     return x - y
 
-# Function to perform multiplication
+
 def multiply(x, y):
     return x * y
 
-# Function to perform division
+
 def divide(x, y):
     if y == 0:
         return "Cannot divide by zero"
     return x / y
 
-# Prompt the user for input
+
 num1 = float(input("Enter the first number: "))
 num2 = float(input("Enter the second number: "))
 
