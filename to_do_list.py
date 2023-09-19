@@ -1,41 +1,64 @@
-import tkinter as tk
+import tkinter
 from tkinter import messagebox
+import pickle
+window = tkinter.Tk()
+window.title("Raniya's to do list")
 
-app = tk.Tk()
-app.title("To-Do List")
-
-# Function to add a new task
-def add_task():
-    task = task_entry.get()
-    if task:
-        task_listbox.insert(tk.END, task)
-        task_entry.delete(0, tk.END)
+def task_adding():
+    todo = task_add.get()
+    if todo !="":
+        todo_box.insert(tkinter.END,todo)
+        task_add.delete(0,tkinter.END)
     else:
-        messagebox.showwarning("Warning", "Please enter a task.")
+        messagebox.showwarning(title="Attention !!",message="to add a task, please enter some task!!")
 
-# Function to delete a selected task
-def delete_task():
+def task_removing():
     try:
-        selected_task_index = task_listbox.curselection()[0]
-        task_listbox.delete(selected_task_index)
-    except IndexError:
-        messagebox.showwarning("Warning", "Please select a task to delete.")
+        index_todo = todo_box.curselection()[0]
+        todo_box.delete(index_todo)
 
-# Create an entry widget for adding tasks
-task_entry = tk.Entry(app, width=40)
-task_entry.pack(pady=10)
+    except:
+        messagebox.showwarning(title="Attention !!",message="To delete a task, you must select a task!!")
 
-# Create a button to add tasks
-add_button = tk.Button(app, text="Add Task", command=add_task)
-add_button.pack()
 
-# Create a listbox to display tasks
-task_listbox = tk.Listbox(app, width=40, selectmode=tk.SINGLE)
-task_listbox.pack(pady=10)
+def task_load():
+    try:
+        with open("tasks.pkl", "rb") as file:
+            tasks = pickle.load(file)
+            todo_box.delete(0, tkinter.END)
+            for task in tasks:
+                todo_box.insert(tkinter.END, task)
+    except FileNotFoundError:
+        messagebox.showwarning("Warning", "No saved tasks found!")
 
-# Create a button to delete selected tasks
-delete_button = tk.Button(app, text="Delete Task", command=delete_task)
-delete_button.pack()
+def task_save():
+    tasks = todo_box.get(0, tkinter.END)
+    with open("tasks.pkl", "wb") as file:
+        pickle.dump(tasks, file)
+list_frame = tkinter.Frame(window)
+list_frame.pack()
 
-# Start the Tkinter main loop
-app.mainloop()
+todo_box = tkinter.Listbox(list_frame, height =20, width=50)
+todo_box.pack(side=tkinter.LEFT)
+
+scroller = tkinter.Scrollbar(list_frame)
+scroller.pack(side=tkinter.RIGHT,fill=tkinter.Y)
+
+todo_box.config(yscrollcommand=scroller.set)
+# # scroller.config(command=list_frame.yview)
+
+task_add = tkinter.Entry(window,width=70)
+task_add.pack()
+
+add_task_button = tkinter.Button(window,text="CLICK TO ADD TASK",font=("arial",20,"bold"),background="sky blue",width=40,command=task_adding)
+add_task_button.pack()
+
+remove_task_button = tkinter.Button(window,text="CLICK TO DELETE TASK",font=("arial",20,"bold"),background="red",width=40,command=task_removing)
+remove_task_button.pack()
+
+load_task_button = tkinter.Button(window,text="CLICK TO LOAD TASK",font=("arial",20,"bold"),background="green",width=40,command=task_load)
+load_task_button.pack()
+save_task_button = tkinter.Button(window,text="CLICK TO SAVE TASK",font=("arial",20,"bold"),background="orange",width=40,command=task_save)
+save_task_button.pack()
+
+window.mainloop()
