@@ -15,7 +15,7 @@ import speech_recognition as sr
 import pygame
 import time
 import os
-
+ 
 pygame.init()
 pygame.mixer.init()
 root = Tk()
